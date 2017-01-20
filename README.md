@@ -23,7 +23,7 @@ Then run the program :
 python run.py
 ```
 
-The output will be the number of cluster found at each second, and the event (json formart) at every change.
+The output will be the number of cluster found at each second, and the event (json format) at every change.
 
 Example
 
@@ -62,7 +62,7 @@ Each position comes with an accuracy which can be very low (high value in meters
 
 #### The sampling of the data
 
-The series of points for a user is not regularely sampled and like the accuracy there can be long moment (many hours) between two points. We have to :
+The series of points for a user is not regularly sampled and like the accuracy there can be long moment (many hours) between two points. We have to :
 
     - Handle time series with big gaps (cut in multiple part)
     - Predict the short term position when the gap is reasonable (we can use the information of the past trajectory)
@@ -89,23 +89,31 @@ Unsupervised algorithm to cluster people based on their closeness :
 
  - We do not want to put everyone in a cluster
  - The cluster must be very dense
- - The number of k can change each second.
+ - The number of k can change each second
+
+We used the DBSCAN for multiple reason and mainly for its weaknesses :
+ - Handle only regularly dense clusters
+ - Comes with the parameter `epsilon` which defines the maximum distance between two samples
 
 Distance metric :
 
- - What distance is reasonnable Haversine
+  - First the Haversine distance between the two points
+  - Then if the accuracy was very low, we weighted it by using the max and min distances possible between points
 
 ### Results
 
 #### Parameters
 
- - Screens
- -
+The only parameters would be the accuracy filter and the epsilon of DBSCAN. The latter is easy to choose when there are no accuracy problems : because we used the Haversine distance, we can reasonably select a minimum distance between two people in the same groups (for instance 4 meters). With the accuracy, we chose 50 meters empirically.
+
+#### Screenshot
+
+Here is an example of an event ()
 
 ### To be done
 
  - Check the last minute and discard group adding or creation if the point is not in this group.
- - `tests` folder with unit tests
+ - Bug fixing / Refacto
 
 ### Future work
 
@@ -127,50 +135,3 @@ Distance metric :
 ### Bibliography
 
 `Density-based Place Clustering in Geo-Social Networks`
-
-
-
-
- - Aire de la sphere toujours égale à 1 (densité en fonction du rayon)
-   - Aire pondérer dans la direction de la personne
- - Calcul de la densité des intersections
- - Approximer lat et long pour etre dans un plan
-
-
- - Visualisation avec couleur
-
- - Premiere regle bateau
-
- - Et après faire un algo qui prend en compte les corrections
-
- Donnée polaire ton euler
-
-
-
-On filtre tous les points dont l'accuracy est supérieur à 65m ~= 25% de la base
-On prend les users qui n'ont aucun elasped time > 1min ~= 81% de la base
-
-
-Probleme de serie qui s'arrete
-Interpolation
-
-
-Conserver l'information user:time:cluster et ne le valider que si le tps total est > Epsilon
-
-
-Algorithm choice :
-
- - clustering
- - no information on k
- - density oriented
- - distance from centroide
-
-Distance : Euclidean seems ok but used Haversine to be able to scale up
-
-
-
-Create folder data
-Create folder images
-
-
-Ajout d'un proba sur le calcul de distance
