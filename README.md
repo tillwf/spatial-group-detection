@@ -118,7 +118,9 @@ The only parameters would be the accuracy filter and the epsilon of DBSCAN. The 
 
 #### Screenshot
 
-Here is an example of an event :
+Here is an example group evolutions :
+
+![Group Evolution](assets/example.gif)
 
 There is also a video of the first evolutions :
 
