@@ -29,14 +29,14 @@ Example
 
 ```json
 {
-    'type': 'decrease',
-    'date': 2,
-    'centroid': (1.0, 1.0),
-    'people_out': set([17]),
-    'previous_cluster_id': 15,
-    'cluster_id': 16,
-    'population': set([16, 15]),
-    'density': 0.0
+    "type": "decrease",
+    "date": 2,
+    "centroid": (1.0, 1.0),
+    "people_out": set([17]),
+    "previous_cluster_id": 15,
+    "cluster_id": 16,
+    "population": set([16, 15]),
+    "density": 0.0
 }
 ```
 
@@ -44,7 +44,7 @@ If you change the value of the variable `PLOT` in `run.py`, you will have the pl
 
 To run the tests :
 
-```python
+```
 nosetests --rednose --force-color tests/
 ```
 
@@ -63,16 +63,16 @@ The main goal of this project is to detect groups creation/modification/deletion
 
 Each position comes with an accuracy which can be very low (high value in meters of imprecision). We then face multiple problems :
 
-    - Distance metric
-    - Shape computation
-    - Centroid localization
+- Distance metric
+- Shape computation
+- Centroid localization
 
 #### The sampling of the data
 
 The series of points for a user is not regularly sampled and like the accuracy there can be long moment (many hours) between two points. We have to :
 
-    - Handle time series with big gaps (cut in multiple part)
-    - Predict the short term position when the gap is reasonable (we can use the information of the past trajectory)
+- Handle time series with big gaps (cut in multiple part)
+- Predict the short term position when the gap is reasonable (we can use the information of the past trajectory)
 
 #### The clustering
 
@@ -82,11 +82,11 @@ The main problem is to group people without knowing the number of group. We have
 
 #### Sampling and accuracy
 
- - Discard the outliers
-   - Using the `exploration.ipynb`, we chose 60m as a minimum viable accuracy
-   - We also removed series with elapsed time > 1min
+- Discard the outliers
+    - Using the `exploration.ipynb`, we chose 60m as a minimum viable accuracy
+    - We also removed series with elapsed time > 1min
 
- - Stationary interpolation of the position if the last position was less than 1 minute before
+- Stationary interpolation of the position if the last position was less than 1 minute before
 
 With this interpolation, we can re-use the series we removed earlier : if no point was detected for 1 minute, the algorithm will not consider it.
 
@@ -94,20 +94,21 @@ With this interpolation, we can re-use the series we removed earlier : if no poi
 
 Unsupervised algorithm to cluster people based on their closeness :
 
- - We do not want to put everyone in a cluster
- - The cluster must be very dense
- - The number of k can change each second
+- We do not want to put everyone in a cluster
+- The cluster must be very dense
+- The number of k can change each second
 
 We used the DBSCAN for multiple reason and mainly for its weaknesses :
- - Handle only regularly dense clusters
- - Comes with the parameter `epsilon` which defines the maximum distance between two samples
+
+- Handle only regularly dense clusters
+- Comes with the parameter `epsilon` which defines the maximum distance between two samples
 
 See [A Review: Comparative Study of Various Clustering Techniques in Data Mining](https://pdfs.semanticscholar.org/337b/a3775d45858243889d9f638567b849e446d5.pdf)
 
 Distance metric :
 
-  - First the Haversine distance between the two points
-  - Then if the accuracy was very low, we weighted it by using the max and min distances possible between points
+- First the Haversine distance between the two points
+- Then if the accuracy was very low, we weighted it by using the max and min distances possible between points
 
 ### Results
 
@@ -123,34 +124,34 @@ There is also a video of the first evolutions :
 
 ### To be done (short term)
 
- - Validate group modification only a certain amount of time has passed (sample not just passing through)
- - Enhance accuracy handling in distance metric
- - Bug fixing / Refacto
+- Validate group modification only a certain amount of time has passed (sample not just passing through)
+- Enhance accuracy handling in distance metric
+- Bug fixing / Refacto
 
 ### Future work
 
 #### Trajectories
 
- - The density of the accuracy circle could be higher in the point 'global' direction. It would change the distance computation. We could use the Ramer-Douglas-Peucker algorithm to extract the general path of the point.
+- The density of the accuracy circle could be higher in the point 'global' direction. It would change the distance computation. We could use the Ramer-Douglas-Peucker algorithm to extract the general path of the point.
 
 #### Contextual informations
 
- - [Density-based Place Clustering in Geo-Social Networks](http://i.cs.hku.hk/~nikos/sigmod14.pdf)
- - [Ad-Hoc Group Formation/Detection for Better Shopping Experience](http://www.ijeit.com/vol%202/Issue%205/IJEIT1412201211_04.pdf)
- - [Jasmine: A Real-time Local-event Detection System based on Geolocation Information Propagated to Microblogs](https://pdfs.semanticscholar.org/ecc1/3be3e07f8f1c74c5212d576374abbb355f38.pdf)
- - [Social Event Detection in Massive Mobile Phone Data Using Probabilistic Location Inference](https://hal.inria.fr/file/index/docid/627122/filename/socialcom_2011.pdf)
+- [Density-based Place Clustering in Geo-Social Networks](http://i.cs.hku.hk/~nikos/sigmod14.pdf)
+- [Ad-Hoc Group Formation/Detection for Better Shopping Experience](http://www.ijeit.com/vol%202/Issue%205/IJEIT1412201211_04.pdf)
+- [Jasmine: A Real-time Local-event Detection System based on Geolocation Information Propagated to Microblogs](https://pdfs.semanticscholar.org/ecc1/3be3e07f8f1c74c5212d576374abbb355f38.pdf)
+- [Social Event Detection in Massive Mobile Phone Data Using Probabilistic Location Inference](https://hal.inria.fr/file/index/docid/627122/filename/socialcom_2011.pdf)
 
 #### Graphical
 
- - Add circle of the size of the accuracy with a corresponding `alpha`
- - Add the map of Paris
+- Add circle of the size of the accuracy with a corresponding `alpha`
+- Add the map of Paris
 
 #### Handle mobility
 
- - [Group Detection in Mobility Traces](https://pdfs.semanticscholar.org/0b1d/d3f9411b595f5f75e365b175479866ed93bc.pdf)
+- [Group Detection in Mobility Traces](https://pdfs.semanticscholar.org/0b1d/d3f9411b595f5f75e365b175479866ed93bc.pdf)
 
 ### Bibliography / Sources / To read
 
- - [ST-DBSCAN: An algorithm for clustering spatial–temporal data (2006)](http://kt.ijs.si/markodebeljak/Lectures/Seminar_MPS/2012_on/Seminars_2015_16/Matej%20Senozetnik/Matej%20Senozetnik%20references/Birant,%20ST-DBSCAN%20An%20algorithm%20for%20clustering.pdf)
- - [Ramer–Douglas–Peucker algorithm](https://github.com/sebleier/RDP)
- - [Limits of Predictability in Human Mobility](https://zehui.yolasite.com/resources/Limits%20of%20Predictability%20in%20Human%20Mobility.pdf)
+- [ST-DBSCAN: An algorithm for clustering spatial–temporal data (2006)](http://kt.ijs.si/markodebeljak/Lectures/Seminar_MPS/2012_on/Seminars_2015_16/Matej%20Senozetnik/Matej%20Senozetnik%20references/Birant,%20ST-DBSCAN%20An%20algorithm%20for%20clustering.pdf)
+- [Ramer–Douglas–Peucker algorithm](https://github.com/sebleier/RDP)
+- [Limits of Predictability in Human Mobility](https://zehui.yolasite.com/resources/Limits%20of%20Predictability%20in%20Human%20Mobility.pdf)
