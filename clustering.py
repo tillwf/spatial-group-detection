@@ -77,7 +77,10 @@ def emit_event(clustering, time, previous_users, current_users, previous_cluster
 
 def mean_distance_intra_centroid(clustering, users):
     X = np.array(clustering.loc[users, ['latitude', 'longitude', 'accuracy']])
-    distances = pairwise_distances(X, metric=lambda X, Y: haversine_acc(X, Y))
+    try:
+        distances = pairwise_distances(X, metric=lambda X, Y: haversine_acc(X, Y))
+    except:
+        distances = -1
     return np.mean(distances)
 
 
