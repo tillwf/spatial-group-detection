@@ -23,7 +23,22 @@ Then run the program :
 python run.py
 ```
 
-The output will be the number of cluster found at each second, and the event json at every change.
+The output will be the number of cluster found at each second, and the event (json formart) at every change.
+
+Example
+
+```jso
+{
+    'type': 'decrease',
+    'date': 2,
+    'centroid': (1.0, 1.0),
+    'people_out': set([17]),
+    'previous_cluster_id': 15,
+    'cluster_id': 16,
+    'population': set([16, 15]),
+    'density': 0.0
+}
+```
 
 If you change the value of the variable `PLOT` in `run.py`, you will have the plot of each step (with colored clusters) in the folder `images`.
 
@@ -37,23 +52,36 @@ The main goal of this project is to detect groups creation/modification/deletion
 
 ### Problematics
 
- - Accuracy of the data
+#### The Accuracy of the data
+
+Each position comes with an accuracy which can be very low (high value in meters of imprecision). We then face multiple problems :
+
     - Distance metric
     - Shape computation
     - Centroid localization
- - Sampling of the data
-    - Handle time series with beg gaps (cut in multiple part)
-    - Predict the short term position when the gap is reasonable
- - 'Exclusive' clustering without `k`
+
+#### The sampling of the data
+
+The series of points for a user is not regularely sampled and like the accuracy there can be long moment (many hours) between two points. We have to :
+
+    - Handle time series with big gaps (cut in multiple part)
+    - Predict the short term position when the gap is reasonable (we can use the information of the past trajectory)
+
+#### The clustering
+
+The main problem is to group people without knowing the number of group. We have to use the repartition of the point to extract this information.
 
 ### Approach
 
 #### Sampling and accuracy
 
- - Discard of the outlier
-   - Accuracy > 60m
-   - Series with elapsed time > 1min
- - Linear interpolation of the position
+ - Discard the outliers
+   - Using the `exploration.ipynb`, we chose 60m as a minimum viable accuracy
+   - We also removed series with elapsed time > 1min
+
+ - Stationary interpolation of the position if the last position was less than 1 minute before
+
+With this interpolation, we can re-use the series we removed earlier : if no point was detected for 1 minute, the algorithm will not consider it.
 
 #### Clustering
 
