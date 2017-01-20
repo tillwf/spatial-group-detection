@@ -32,13 +32,16 @@ def normalize(clustering, time):
 def emit_event(clustering, time, previous_users, current_users, previous_cluster_id, current_cluster_id):
     event = {"date": time}
 
-    if len(current_users) == 0:
-        # Cluster deletion
-        event.update({
-            "type": "deletion",
-            "cluster_id": previous_cluster_id,
-            "people_out": previous_users
-        })
+    if len(current_users) < 2:
+        if len(previous_users):
+            # Cluster deletion
+            event.update({
+                "type": "deletion",
+                "cluster_id": previous_cluster_id,
+                "people_out": previous_users
+            })
+        else:
+            return
     else:
         mean_lat = clustering.loc[list(current_users)].latitude
         mean_long = clustering.loc[list(current_users)].longitude
@@ -134,9 +137,15 @@ def events_to_minus1(clustering, time):
         if len(kept_users):
             # Cluster is alive
             users_in_cluster = current_clus.reset_index().groupby('clustering%s' % time).user_id.apply(set)
-            new_cluster_id = users_in_cluster[users_in_cluster == kept_users].index.tolist()[0]
+            try:
+                new_cluster_id = users_in_cluster[users_in_cluster == kept_users].index.tolist()[0]
+            except:
+                print "There is a point that leaves with another point that arrives... problematic"
+                new_cluster_id = -1
 
         event = emit_event(clustering, time, previous_users, kept_users, cluster_id, new_cluster_id)
-        events.append(event)
+
+        if event:
+            events.append(event)
 
     return events
