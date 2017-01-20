@@ -31,7 +31,7 @@ def get_df_at_time(df, time, max_allowed=60):
     # Take the last time of every user
     last_times = df[df.created_at <= time].groupby(["user_id"]).last()
     # Remove user where last time < time - 30
-    user_alive = last_times[last_times >= time - max_allowed].index.tolist()
+    user_alive = last_times[last_times.created_at >= time - max_allowed].index.tolist()
     last_times = last_times.reset_index()
     return last_times[last_times.user_id.apply(lambda x: x in user_alive)].reset_index()
 
