@@ -28,6 +28,7 @@ def filter_on_max_accuracy(df, max_allowed=MIN_ACCURACY_ALLOWED):
 
 
 def filter_on_max_elapsed_time(df, max_allowed=MAX_TIME_DELTA_ALLOWED):
+    # Very drastic (ex: user_id=1)
     max_elapsed_time = get_elapsed_times(df).apply(tweak_max)
     filtered_user_ids = max_elapsed_time[max_elapsed_time <= max_allowed].index
     return df[df.user_id.apply(lambda x: x in filtered_user_ids)]

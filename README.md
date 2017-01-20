@@ -27,9 +27,13 @@ The output will be the number of cluster found at each second, and the event jso
 
 If you change the value of the variable `PLOT` in `run.py`, you will have the plot of each step (with colored clusters) in the folder `images`.
 
+- IPython Notebook
+
+You can browse the file `exploration.ipynb` which explain the choice of some variables. (PS: The first graph doesn't seem to work)
+
 ### Main goal
 
-The main goal of this project is to detect groups creation/modification/dissolution on temporal and geo-spatial data.
+The main goal of this project is to detect groups creation/modification/deletion on temporal and geo-spatial data.
 
 ### Problematics
 
@@ -38,6 +42,8 @@ The main goal of this project is to detect groups creation/modification/dissolut
     - Shape computation
     - Centroid localization
  - Sampling of the data
+    - Handle time series with beg gaps (cut in multiple part)
+    - Predict the short term position when the gap is reasonable
  - 'Exclusive' clustering without `k`
 
 ### Approach
