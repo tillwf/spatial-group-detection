@@ -13,7 +13,8 @@ def get_data(filtered=False):
     if filtered:
         initial_length = len(df)
         df = filter_on_max_accuracy(df, MIN_ACCURACY_ALLOWED)
-        df = filter_on_max_elapsed_time(df, MAX_TIME_DELTA_ALLOWED)
+        # This is not necessary
+        # df = filter_on_max_elapsed_time(df, MAX_TIME_DELTA_ALLOWED)
 
         percentage_kept = round(len(df) * 100.0 / initial_length, 2)
 
