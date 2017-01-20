@@ -36,7 +36,7 @@ def init_plot(xmin, ymin, xmax, ymax):
 
 
 def plot_clustering(X, time, labels, core_samples_mask, fig, save=False):
-    plt.clf()
+    fig.clf()
     ax = fig.add_subplot()
 
     n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
