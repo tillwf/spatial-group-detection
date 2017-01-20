@@ -124,6 +124,8 @@ Here is an example group evolutions :
 
 There is also a video of the first evolutions :
 
+![Video of the 15241 first seconds](assets/video.mp4)
+
 ### To be done (short term)
 
 - Validate group modification only a certain amount of time has passed (sample not just passing through)
