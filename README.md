@@ -27,7 +27,7 @@ The output will be the number of cluster found at each second, and the event (js
 
 Example
 
-```jso
+```json
 {
     'type': 'decrease',
     'date': 2,
@@ -41,6 +41,13 @@ Example
 ```
 
 If you change the value of the variable `PLOT` in `run.py`, you will have the plot of each step (with colored clusters) in the folder `images`.
+
+To run the tests :
+
+```python
+nosetests --rednose --force-color tests/
+```
+
 
 - IPython Notebook
 
