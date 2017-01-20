@@ -23,8 +23,7 @@ if PLOT:
 
 clustering = pd.DataFrame()
 
-time_range = range(0, max(df.created_at) / 100)
-# time_range = [13311, 13312]
+time_range = range(0, max(df.created_at))
 
 for time in time_range:
 
