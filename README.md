@@ -71,20 +71,20 @@ Each position comes with an accuracy which can be very low (high value in meters
 
 The series of points for a user is not regularly sampled and like the accuracy there can be long moment (many hours) between two points. We have to :
 
-- Handle time series with big gaps (cut in multiple part)
+- Handle time series with big gaps (cut in multiple parts)
 - Predict the short term position when the gap is reasonable (we can use the information of the past trajectory)
 
 #### The clustering
 
-The main problem is to group people without knowing the number of group. We have to use the repartition of the point to extract this information.
+The main problem is to group people without knowing the number of group. We can only use the repartition of the points (and its evolutions) to extract this information.
 
 ### Approach
 
 #### Sampling and accuracy
 
 - Discard the outliers
-    - Using the `exploration.ipynb`, we chose 60m as a minimum viable accuracy
-    - We also removed series with elapsed time > 1min
+    - Using the `exploration.ipynb`, we chose 60 meters as a minimum viable accuracy
+    - We also removed series with elapsed time > 1 minute
 
 - Stationary interpolation of the position if the last position was less than 1 minute before
 
@@ -96,18 +96,21 @@ Unsupervised algorithm to cluster people based on their closeness :
 
 - We do not want to put everyone in a cluster
 - The cluster must be very dense
-- The number of k can change each second
+- The number `k` of clusters can change every second
 
-We used the DBSCAN for multiple reason and mainly for its weaknesses :
+We used the [DBSCAN](https://www.wikiwand.com/en/DBSCAN) algorithm for multiple reasons and mainly for its weaknesses :
 
 - Handle only regularly dense clusters
 - Comes with the parameter `epsilon` which defines the maximum distance between two samples
+- Is less effective with high dimensional problems
 
-See [A Review: Comparative Study of Various Clustering Techniques in Data Mining](https://pdfs.semanticscholar.org/337b/a3775d45858243889d9f638567b849e446d5.pdf)
+See [A Review: Comparative Study of Various Clustering Techniques in Data Mining](https://pdfs.semanticscholar.org/337b/a3775d45858243889d9f638567b849e446d5.pdf) (short and precise)
 
 Distance metric :
 
-- First the Haversine distance between the two points
+We chose a distance metric that could be easily understandable, to be able to choose the best epsilon for DBSCAN.
+
+- First we used the [Haversine](https://www.wikiwand.com/en/Haversine_formula) formula between two points
 - Then if the accuracy was very low, we weighted it by using the max and min distances possible between points
 
 ### Results
@@ -115,6 +118,8 @@ Distance metric :
 #### Parameters
 
 The only parameters would be the accuracy filter and the epsilon of DBSCAN. The latter is easy to choose when there are no accuracy problems : because we used the Haversine distance, we can reasonably select a minimum distance between two people in the same groups (for instance 4 meters). With the accuracy, we chose 50 meters empirically.
+
+Moreover the sparse positions in the dataset allow us to be less strict on the minimum distance between dots.
 
 #### Screenshot
 
@@ -128,15 +133,17 @@ There is also a video of the first evolutions :
 
 ### To be done (short term)
 
-- Validate group modification only a certain amount of time has passed (sample not just passing through)
+- Validate group modification only if a certain amount of time has passed (sample not just passing through)
 - Enhance accuracy handling in distance metric
+- Better graphical output
 - Bug fixing / Refacto
 
 ### Future work
 
 #### Trajectories
 
-- The density of the accuracy circle could be higher in the point 'global' direction. It would change the distance computation. We could use the Ramer-Douglas-Peucker algorithm to extract the general path of the point.
+- The density of the accuracy circle could be higher in the point 'global' direction. It would change the distance computation. We could use the [Ramer-Douglas-Peucker](https://www.wikiwand.com/en/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm) algorithm to extract the general path of the point.
+- Could be use have a better interpolation.
 
 #### Contextual informations
 
@@ -157,5 +164,5 @@ There is also a video of the first evolutions :
 ### Bibliography / Sources / To read
 
 - [ST-DBSCAN: An algorithm for clustering spatial–temporal data (2006)](http://kt.ijs.si/markodebeljak/Lectures/Seminar_MPS/2012_on/Seminars_2015_16/Matej%20Senozetnik/Matej%20Senozetnik%20references/Birant,%20ST-DBSCAN%20An%20algorithm%20for%20clustering.pdf)
-- [Ramer–Douglas–Peucker algorithm](https://github.com/sebleier/RDP)
+- [Ramer–Douglas–Peucker algorithm implementation](https://github.com/sebleier/RDP)
 - [Limits of Predictability in Human Mobility](https://zehui.yolasite.com/resources/Limits%20of%20Predictability%20in%20Human%20Mobility.pdf)
